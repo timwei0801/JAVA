@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>德州撲克遊戲</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .start-button {
+        padding: 10px 20px;
+        font-size: 1.2em;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin: 10px 0;
+        }
+
+        .start-button:hover {
+        background-color: #45a049;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .player-area {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            background-color: #f8f9fa;
+        }
+
+        .table-area {
+            padding: 20px;
+            border: 2px solid #2c5282;
+            border-radius: 12px;
+            margin: 20px 0;
+            background-color: #48bb78;
+        }
+
+        .cards-area {
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .community-cards {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .pot-area {
+            text-align: center;
+            padding: 10px;
+            color: white;
+        }
+
+        .chip-count {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .game-status {
+            font-size: 1.2em;
+            color: white;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer; /* 添加游標指示器 */
+            transition: background-color 0.3s; /* 添加過渡效果 */
+        }
+
+        .game-status:hover {
+            background-color: rgba(0, 0, 0, 0.3); /* 添加懸停效果 */
+        }
+
+        .player-info {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 控制按鈕區域樣式 */
+        .controls {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .basic-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 100px;
+            transition: background-color 0.3s;
+        }
+
+        .action-button:hover {
+            background-color: #45a049;
+        }
+
+        .raise-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .raise-input {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .raise-amount-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .raise-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .suggest-button {
+            padding: 5px 10px;
+            background-color: #f0f9f0;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .suggest-button:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="bot-area" class="player-area">
+            <div class="player-info">
+                <div id="bot-chips" class="chip-count">籌碼: $1000</div>
+            </div>
+            <div id="bot-hand" class="cards-area"></div>
+        </div>
+
+        <div class="table-area">
+            <div class="community-cards">
+                <div id="community" class="cards-area"></div>
+            </div>  
+
+            <div class="pot-area">
+                <div id="pot" class="pot-amount">底池: $0</div>
+                <button id="start-button" class="start-button" onclick="startGame()">開始遊戲</button>
+                <div id="game-status" class="game-status">請點擊開始遊戲</div>
+            </div>
+        </div>
+
+        <div id="player-area" class="player-area">
+            <div id="player-hand" class="cards-area"></div>
+            <div class="player-info">
+                <div id="player-chips" class="chip-count">籌碼: $1000</div>
+            </div>
+            <div id="controls-container" class="controls">
+                <button onclick="playerAction('fold')" class="action-button">棄牌</button>
+                <button onclick="playerAction('call')" class="action-button">跟注</button>
+                <button onclick="playerAction('raise')" class="action-button">加注</button>
+            </div>
+        </div>
+    </div>
+    <script src="poker-game.js"></script>
+</body>
+</html>
