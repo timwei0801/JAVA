@@ -175,39 +175,115 @@
             background-color: #4CAF50;
             color: white;
         }
+
+        .game-container {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        }
+
+        .game-area {
+        flex: 1;
+        }
+
+.action-log {
+    width: 300px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 15px;
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+.log-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.log-content {
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.position-marker {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-right: 10px;
+    color: white;
+    background-color: #3498db;  /* 藍色背景 */
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.current-hand {
+    border-top: 2px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.action-entry {
+    padding: 4px 0;
+    color: #666;
+}
+
+.action-entry.player {
+    color: #2ecc71;
+}
+
+.action-entry.bot {
+    color: #e74c3c;
+}
     </style>
 </head>
 <body>
     <div class="game-container">
-        <div id="bot-area" class="player-area">
-            <div class="player-info">
-                <div id="bot-chips" class="chip-count">籌碼: $1000</div>
+        <div class="game-area">
+            <!-- 電腦區域 -->
+            <div id="bot-area" class="player-area">
+                <div class="player-info">
+                    <div id="bot-position" class="position-marker"></div>
+                    <div id="bot-chips" class="chip-count">籌碼: $1000</div>
+                </div>
+                <div id="bot-hand" class="cards-area"></div>
             </div>
-            <div id="bot-hand" class="cards-area"></div>
+    
+            <!-- 牌桌區域 -->
+            <div class="table-area">
+                <div class="community-cards">
+                    <div id="community" class="cards-area"></div>
+                </div>  
+                <div class="pot-area">
+                    <div id="pot" class="pot-amount">底池: $0</div>
+                    <button id="start-button" class="start-button">開始遊戲</button>
+                    <div id="game-status" class="game-status">請點擊開始遊戲</div>
+                </div>
+            </div>
+    
+            <!-- 玩家區域 -->
+            <div id="player-area" class="player-area">
+                <div id="player-hand" class="cards-area"></div>
+                <div class="player-info">
+                    <div id="player-position" class="position-marker"></div>
+                    <div id="player-chips" class="chip-count">籌碼: $1000</div>
+                </div>
+                <div id="controls-container" class="controls"></div>
+            </div>
         </div>
-
-        <div class="table-area">
-            <div class="community-cards">
-                <div id="community" class="cards-area"></div>
-            </div>  
-
-            <div class="pot-area">
-                <div id="pot" class="pot-amount">底池: $0</div>
-                <button id="start-button" class="start-button" onclick="startGame()">開始遊戲</button>
-                <div id="game-status" class="game-status">請點擊開始遊戲</div>
-            </div>
-        </div>
-
-        <div id="player-area" class="player-area">
-            <div id="player-hand" class="cards-area"></div>
-            <div class="player-info">
-                <div id="player-chips" class="chip-count">籌碼: $1000</div>
-            </div>
-            <div id="controls-container" class="controls">
-                <button onclick="playerAction('fold')" class="action-button">棄牌</button>
-                <button onclick="playerAction('call')" class="action-button">跟注</button>
-                <button onclick="playerAction('raise')" class="action-button">加注</button>
-            </div>
+    
+        <!-- 操作記錄區域 -->
+        <div id="action-log" class="action-log">
+            <div class="log-header">操作記錄</div>
+            <div id="log-content" class="log-content"></div>
         </div>
     </div>
     <script src="poker-game.js"></script>
