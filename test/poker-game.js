@@ -768,6 +768,7 @@ function handlePlayerRaise(raiseAmount) {
     
     const bbRaiseAmount = (raiseAmount / gameState.bigBlind).toFixed(1);
     setGameStatus(`玩家選擇加注 ${bbRaiseAmount}BB ($${raiseAmount})`);
+    logAction('玩家', '加注', raiseAmount);
     updateDisplay();
     
     setTimeout(() => {
@@ -805,14 +806,20 @@ function botDecision() {
             gameState.isPlayerTurn = true;
             gameState.roundFirstAction = false;
             
-            setTimeout(() => {
-                if (gameState.isPlayerTurn) {
-                    setGameStatus('輪到玩家行動');
-                    updateDisplay();
-                } else {
+            if (gameState.stage === STAGES.RIVER) {
+                setTimeout(() => {
                     handleRoundEnd();
-                }
-            }, 1500);
+                }, 1500);
+            } else {
+                setTimeout(() => {
+                    if (gameState.isPlayerTurn) {
+                        setGameStatus('輪到玩家行動');
+                        updateDisplay();
+                    } else {
+                        handleRoundEnd();
+                    }
+                }, 1500);
+            }
         } else {
             // 選擇加注
             const betAmount = gameState.bigBlind;
@@ -901,13 +908,21 @@ function handleBotResponse(randomAction) {
         const callAmount = gameState.currentBet;
         gameState.botChips -= callAmount;
         gameState.pot += callAmount;
-        setGameStatus(`電腦選擇跟注 ${amountToBB(callAmount, gameState.bigBlind)}BB`);
+        setGameStatus(`電腦選擇跟注 ${amountToBB(callAmount, gameState.bigBlind)}`);
         logAction('電腦', '跟注', callAmount);
         gameState.needResponse = false;
         
-        setTimeout(() => {
-            handleRoundEnd();
-        }, 1500);
+        if (gameState.stage === STAGES.RIVER) {
+            setTimeout(() => {
+                gameState.stage = STAGES.SHOWDOWN;
+                determineWinner();
+                setTimeout(resetGame, 3000);
+            }, 1500);
+        } else {
+            setTimeout(() => {
+                handleRoundEnd();
+            }, 1500);
+        }
     }
     else {
         handleBotRaise();
