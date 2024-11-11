@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>德州撲克 - 登入/註冊</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2 id="formTitle">登入</h2>
+            </div>
+            <form id="authForm" class="auth-form">
+                <div class="form-group">
+                    <label for="username">用戶名</label>
+                    <input type="text" id="username" name="username" placeholder="請輸入用戶名" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密碼</label>
+                    <input type="password" id="password" name="password" placeholder="請輸入密碼" required>
+                </div>
+                
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label for="confirmPassword">確認密碼</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="請再次輸入密碼">
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+
+                <button type="submit" id="submitButton" class="submit-btn">登入</button>
+                
+                <div class="switch-mode">
+                    <a href="#" id="switchModeBtn">還沒有帳號？立即註冊</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/login.js"></script>
+</body>
+</html>
